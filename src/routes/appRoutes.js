@@ -9,6 +9,7 @@ import TimeSelector from '../components/dashboard/timeSelector';
 import SeatBooking from '../components/dashboard/seatBooking';
 import PrivateRoute from './privateRoute';
 import WrappedComponent from '../containers/wrappedComponent';
+import AccountManagement from '../components/account/accountManagement';
 
 const browserHistory = createBrowserHistory();
 
@@ -36,6 +37,11 @@ const AppRoutes = () => {
                 <PrivateRoute
                     path="/seat-booking"
                     component={SeatBooking}
+                    isAuthenticated={true}
+                />
+                <PrivateRoute
+                    path="/account-management"
+                    component={AccountManagement}
                     isAuthenticated={true}
                 />
             </Switch>

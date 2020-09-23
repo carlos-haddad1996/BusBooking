@@ -43,6 +43,21 @@ const MainAppBar = () => {
     const classes = useStyles();
     const history = useHistory();
 
+    const menuItems = [
+        {
+            name: 'Home',
+            path: '/',
+        },
+        {
+            name: 'Settings',
+            path: '/settings',
+        },
+        {
+            name: 'Account Management',
+            path: '/account-management',
+        },
+    ];
+
     return (
         <div className={classes.root}>
             <CssBaseline />
@@ -61,30 +76,18 @@ const MainAppBar = () => {
                 <Toolbar />
                 <div className={classes.drawerContainer}>
                     <List>
-                        {['Home', 'Settings', 'Account Management'].map(
-                            (text, item) => (
-                                <ListItem button key={text}>
-                                    {text === 'Home' ? (
-                                        <ListItemText
-                                            primary={text}
-                                            style={{
-                                                color: 'white',
-                                                fontWeight: '50%',
-                                            }}
-                                            onClick={() => history.push('/')}
-                                        />
-                                    ) : (
-                                        <ListItemText
-                                            primary={text}
-                                            style={{
-                                                color: 'white',
-                                                fontWeight: '50%',
-                                            }}
-                                        />
-                                    )}
-                                </ListItem>
-                            )
-                        )}
+                        {menuItems.map((item) => (
+                            <ListItem button key={item.name}>
+                                <ListItemText
+                                    primary={item.name}
+                                    style={{
+                                        color: 'white',
+                                        fontWeight: '50%',
+                                    }}
+                                    onClick={() => history.push(item.path)}
+                                />
+                            </ListItem>
+                        ))}
                     </List>
                     <Divider />
                     <List>
