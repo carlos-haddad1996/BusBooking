@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 import AccountCard from './accountCard';
+import BusManagement from './busManagement';
 
 const Accordion = withStyles({
     root: {
@@ -55,6 +56,7 @@ const AccordionDetails = withStyles((theme) => ({
 const AccountManagement = () => {
     const [expanded, setExpanded] = useState('');
     const [clients, setClients] = useState([]);
+    const [buses, setBuses] = useState([]);
 
     const handleChange = (panel) => (event, newExpanded) => {
         setExpanded(newExpanded ? panel : false);
@@ -63,6 +65,10 @@ const AccountManagement = () => {
     useEffect(() => {
         getClients()
             .then((res) => setClients(res.clientes))
+            .catch((err) => console.log(err));
+
+        getBuses()
+            .then((res) => setBuses(res.buses))
             .catch((err) => console.log(err));
     }, []);
 
@@ -76,42 +82,84 @@ const AccountManagement = () => {
         return body;
     };
 
-    console.log(clients[0]);
+    const getBuses = async () => {
+        const response = await fetch('/buses');
+        const body = await response.json();
 
-    if (clients[0] === undefined) {
+        if (response.status !== 200) {
+            throw Error(body.message);
+        }
+        return body;
+    };
+
+    if (clients[0] === undefined || buses[0] === undefined) {
         return <Typography>Loading</Typography>;
     } else {
         return (
-            <Grid item container>
-                <Accordion
-                    square
-                    expanded={expanded === 'panel1'}
-                    onChange={handleChange('panel1')}
-                >
-                    <AccordionSummary
-                        aria-controls="panel1d-content"
-                        id="panel1d-header"
+            <Grid item container alignItems="center" spacing={4}>
+                <Grid item container>
+                    <Accordion
+                        square
+                        expanded={expanded === 'panel1'}
+                        onChange={handleChange('panel1')}
                     >
-                        <Typography>Registered Clients</Typography>
-                    </AccordionSummary>
-                    <AccordionDetails>
-                        <Grid
-                            item
-                            container
-                            spacing={2}
-                            alignItems="center"
-                            justify="flex-end"
+                        <AccordionSummary
+                            aria-controls="panel1d-content"
+                            id="panel1d-header"
                         >
-                            {clients[0].map((client) => {
-                                return (
-                                    <Grid item xs={6} container key={client}>
-                                        <AccountCard client={client} />
-                                    </Grid>
-                                );
-                            })}
-                        </Grid>
-                    </AccordionDetails>
-                </Accordion>
+                            <Typography>Registered Clients</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Grid
+                                item
+                                container
+                                spacing={2}
+                                alignItems="center"
+                                justify="flex-end"
+                            >
+                                {clients[0].map((client) => {
+                                    return (
+                                        <Grid
+                                            item
+                                            xs={6}
+                                            container
+                                            key={client}
+                                        >
+                                            <AccountCard client={client} />
+                                        </Grid>
+                                    );
+                                })}
+                            </Grid>
+                        </AccordionDetails>
+                    </Accordion>
+                </Grid>
+                <Grid item container>
+                    <Accordion
+                        square
+                        expanded={expanded === 'panel2'}
+                        onChange={handleChange('panel2')}
+                    >
+                        <AccordionSummary
+                            aria-controls="panel1d-content"
+                            id="panel1d-header"
+                        >
+                            <Typography>Buses Disponibles</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <Grid
+                                item
+                                container
+                                spacing={2}
+                                alignItems="center"
+                                justify="flex-end"
+                            >
+                                <Grid item container>
+                                    <BusManagement buses={buses[0]} />
+                                </Grid>
+                            </Grid>
+                        </AccordionDetails>
+                    </Accordion>
+                </Grid>
             </Grid>
         );
     }
